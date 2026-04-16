@@ -1,0 +1,12 @@
+Requirements:
+
+use a Task struct
+store tasks in a slice
+each task has ID, Text, and Done
+support commands: add, list, done, delete
+save data in tasks.json
+
+Stretch goal:
+
+prevent duplicate IDs
+show completed and pending tasks separately
