@@ -47,7 +47,13 @@ func list_tasks() error {
 		return unmarshal_json_err
 	}
 	for _, task := range tasks {
-		fmt.Printf("Task ID: %d %v Done: %t\n", task.ID, task.Text, task.Done)
+		fmt.Printf("[%d] %v ", task.ID, task.Text)
+		if task.Done {
+			fmt.Printf("- done")
+		} else {
+			fmt.Printf("- pending")
+		}
+		fmt.Printf("\n")
 	}
 	return nil
 }
