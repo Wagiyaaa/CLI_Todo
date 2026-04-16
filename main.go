@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 type Task struct {
@@ -54,6 +55,31 @@ func list_tasks() error {
 			fmt.Printf("- pending")
 		}
 		fmt.Printf("\n")
+	}
+	return nil
+}
+
+func finish_task(id int) error {
+	var tasks []Task
+	unmarshal_json_err := unmarshal_json(&tasks)
+	if unmarshal_json_err != nil {
+		fmt.Println(unmarshal_json_err)
+		return unmarshal_json_err
+	}
+	for i := range tasks {
+		if tasks[i].ID == id {
+			if tasks[i].Done != true {
+				tasks[i].Done = true
+				fmt.Printf("Task [%d] set to done!", tasks[i].ID)
+			} else {
+				fmt.Printf("Task is already set to done!")
+			}
+		}
+	}
+	marshal_json_err := marshal_json(&tasks)
+	if marshal_json_err != nil {
+		fmt.Println(marshal_json_err)
+		return marshal_json_err
 	}
 	return nil
 }
@@ -124,6 +150,19 @@ func main() {
 			err := list_tasks()
 			if err != nil {
 				fmt.Println(err)
+				return
+			}
+			return
+		}
+		if args[1] == "done" && len(args) == 3 {
+			id, atoi_err := strconv.Atoi(args[2])
+			if atoi_err != nil {
+				fmt.Println(atoi_err)
+				return
+			}
+			finish_task_err := finish_task(id)
+			if finish_task_err != nil {
+				fmt.Println(finish_task_err)
 				return
 			}
 			return
