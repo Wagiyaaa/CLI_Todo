@@ -40,6 +40,18 @@ func unmarshal_json(tasks *[]Task) error {
 	return nil
 }
 
+func list_tasks() error {
+	var tasks []Task
+	unmarshal_json_err := unmarshal_json(&tasks)
+	if unmarshal_json_err != nil {
+		return unmarshal_json_err
+	}
+	for _, task := range tasks {
+		fmt.Printf("Task ID: %d %v Done: %t\n", task.ID, task.Text, task.Done)
+	}
+	return nil
+}
+
 func add_task(text string) error {
 	var tasks []Task
 
@@ -47,7 +59,7 @@ func add_task(text string) error {
 	if unmarshal_err != nil {
 		return unmarshal_err
 	}
-	
+
 	var id int
 	if len(tasks) == 0 {
 		id = 1
@@ -96,6 +108,14 @@ func main() {
 		}
 		if args[1] == "add" && len(args) == 3 {
 			err := add_task(args[2])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			return
+		}
+		if args[1] == "list" && len(args) == 2 {
+			err := list_tasks()
 			if err != nil {
 				fmt.Println(err)
 				return
