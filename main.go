@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 )
 
@@ -74,6 +75,28 @@ func finish_task(id int) error {
 			} else {
 				fmt.Printf("Task is already set to done!")
 			}
+		}
+	}
+	marshal_json_err := marshal_json(&tasks)
+	if marshal_json_err != nil {
+		fmt.Println(marshal_json_err)
+		return marshal_json_err
+	}
+	return nil
+}
+
+func delete_task(id int) error {
+	var tasks []Task
+	unmarshal_json_err := unmarshal_json(&tasks)
+	if unmarshal_json_err != nil {
+		fmt.Println(unmarshal_json_err)
+		return unmarshal_json_err
+	}
+	for i := range tasks {
+		if tasks[i].ID == id {
+			tasks = slices.Delete(tasks, i, i+1)
+			fmt.Printf("Deleted task [%d]\n", id)
+			break
 		}
 	}
 	marshal_json_err := marshal_json(&tasks)
@@ -163,6 +186,19 @@ func main() {
 			finish_task_err := finish_task(id)
 			if finish_task_err != nil {
 				fmt.Println(finish_task_err)
+				return
+			}
+			return
+		}
+		if args[1] == "delete" && len(args) == 3 {
+			id, atoi_err := strconv.Atoi(args[2])
+			if atoi_err != nil {
+				fmt.Println(atoi_err)
+				return
+			}
+			delete_task_err := delete_task(id)
+			if delete_task_err != nil {
+				fmt.Println(delete_task_err)
 				return
 			}
 			return
