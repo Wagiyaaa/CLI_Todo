@@ -15,7 +15,7 @@ type Task struct {
 }
 
 func marshal_json(tasks *[]Task) error {
-	jsonTask, json_encode_err := json.Marshal(&tasks)
+	jsonTask, json_encode_err := json.Marshal(tasks)
 	if json_encode_err != nil {
 		fmt.Println(json_encode_err)
 		return json_encode_err
@@ -34,7 +34,7 @@ func unmarshal_json(tasks *[]Task) error {
 	if read_file_err != nil {
 		return read_file_err
 	}
-	unmarshal_err := json.Unmarshal(json_data, &tasks)
+	unmarshal_err := json.Unmarshal(json_data, tasks)
 	if unmarshal_err != nil {
 		return unmarshal_err
 	}
